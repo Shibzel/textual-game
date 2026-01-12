@@ -1,6 +1,7 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "file_loader.h"
+#include "file_printer.h"
 
 
 unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
@@ -21,6 +22,13 @@ unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
 }
 
 int main() {
+    printf("Hello world \n");
+    char *eng_text = load_asset("english.txt");
+    if (eng_text != NULL) {
+        printf("yes loaded, mtn test de print \n");
+        print_lines(eng_text);
+        free(eng_text);
+    }
     puts("Hello world!");
 
     get_choice("What do you do ? [1-%d] : ", "Bad input. Try again.", 5);
