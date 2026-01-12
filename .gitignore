@@ -1,6 +1,7 @@
 # Project specific
 .vscode/*
 build/*
+design/histoire/.obsidian/*
 
 
 
