@@ -12,13 +12,13 @@ void print_lines(char* text) {
     
     //Test
     if (text == NULL) return;
-
+ 
     
     strncpy(buffer, text, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0'; 
     line = strtok(buffer, NEW_LINE);
     while (line != NULL) {
-        printf("%s \n",line);
-        line = strtok ( NULL, NEW_LINE );
+        printf("%s\n",line);
+        line = strtok ( NULL, NEW_LINE ); // Usage of NULL per documentation dictates https://koor.fr/C/cstring/strtok.wp
     }
 }
