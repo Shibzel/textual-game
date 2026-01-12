@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>  // Pour strcpy
+
 #include "file_loader.h"
 #include "file_printer.h"
 
@@ -11,7 +13,7 @@ unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
         unvalid = 0;
 
         printf(display, max_inputs);
-        if (scanf("%d", &input) != 1 || input > max_inputs) {
+        if (scanf("%u", &input) != 1 || input > max_inputs) {
             unvalid = 1;
             puts(bad_input);
         }
@@ -21,9 +23,9 @@ unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
     return input;
 }
 
-int main() {
+int main(void) {
     unsigned choice;
-    char language[2];
+    char language[3];
 
     printf("Hello Let's test \n");
     char *eng_text = load_asset("en_000.txt");
@@ -36,11 +38,19 @@ int main() {
     
 
     choice = get_choice(
-        "Please chose a language / Merci de choisir un langage :\n 1) English\n 2) French\nEntrez une valeur / Input a value [1-2] : ",
+        "Please chose a language / Merci de choisir un langage :\n 1) English\n 2) French\nInput a value / Entrez une valeur [1-2] : ",
         "Bad input. Try again",
         2
     );
    
+    switch (choice) {
+        case 1:
+            strcpy(language, "en");
+            break;
+        case 2:
+            strcpy(language, "fr");
+            break;
+    }
 
     // char *eng_text = load_asset("english.txt");
     // if (eng_text != NULL) {
