@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define NEW_LINE "\n"
+#define NEW_LINE "---"
 
 
 
