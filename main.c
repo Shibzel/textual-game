@@ -149,10 +149,8 @@ void init_game(save current_save, char language[3]) {
   int numbr;
   char s[100];
 
-  puts("Itadakimas bismillah les gens");
   numbr = 0;
   snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
-  printf("Loaded file : %s",s);
   eng_text = load_asset(s);
   while (eng_text != NULL) {
     retour_question = parse(eng_text);
@@ -165,7 +163,7 @@ void init_game(save current_save, char language[3]) {
     numbr = get_choice("What do you choose?", "not valid try again",
                        retour_question.NBR_QUESTION);
 
-    snprintf(s, sizeof(s), "en_%03d.txt", numbr);
+    snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
     eng_text = load_asset(s);
   }
 }
