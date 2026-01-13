@@ -1,21 +1,34 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Constants
 #define DELIMITER "---"
+#define NUM_MAX_QUESTION 10
 
+typedef struct {
+  char* Question;
+  int Code;
+}question;
 
-void parse(char *file_content) {
+typedef struct {
+  question questions[NUM_MAX_QUESTION];
+  int NBR_QUESTION;
+}tableau_question;
+
+tableau_question parse(char *file_content) {
+  
   // Sanity Check
   if (file_content == NULL)
-    return;
+    return (tableau_question){0};
 
   // Variables
   char *ptr = file_content;
   char line[1024];
   bool is_question_mode;
   int question_nbr;
+  tableau_question returned_quests;
 
   // Start
   is_question_mode = false;
@@ -36,7 +49,7 @@ void parse(char *file_content) {
       question_nbr = 0;
     } else {
       if (is_question_mode == false) {
-        printf("%s\n", line);
+        puts(line);
       } else {
         char text_part[512];
         char code_part[512];
@@ -46,10 +59,11 @@ void parse(char *file_content) {
         // " %[^\n]" reads the rest (skipping space after semi)
         if (sscanf(line, "%[^;]; %[^\n]", text_part, code_part) == 2) {
           question_nbr++;
-          printf("%d) %s\n", question_nbr, text_part);
+          returned_quests.questions[question_nbr].Question = malloc(strlen(text_part) + 1);
+          strcpy(returned_quests.questions[question_nbr].Question, text_part);
 
-          printf("Code : %s\n", code_part);
-          // TODO : Actually use code given to "teleport" into a new .txt
+          returned_quests.questions[question_nbr].Code = atoi(code_part);
+          returned_quests.NBR_QUESTION = question_nbr;
         } else {
           // In case we forgot ; we just print the line anyway
           printf("%s\n", line);
@@ -69,4 +83,6 @@ void parse(char *file_content) {
       break;
     }
   }
+
+  return returned_quests;
 }
