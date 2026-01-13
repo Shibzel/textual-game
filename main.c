@@ -142,7 +142,26 @@ void save_save(char *save_path, char *save_fn, save current_save) {
   fclose(fptr);
 }
 
-void init_game(save current_save) { puts("Itadakimas bismillah les gens"); }
+void init_game(save current_save) {
+  tableau_question retour_question;
+  puts("Itadakimas bismillah les gens");
+  char *eng_text = load_asset("en_000.txt");
+  int numbr;
+  while (eng_text != NULL) {
+    retour_question = parse(eng_text);
+    for (int question = 1; question <= retour_question.NBR_QUESTION;
+         question++) {
+      printf(" %d) %s\n", question,
+             retour_question.questions[question].Question);
+    }
+    free(eng_text);
+    numbr = get_choice("What do you choose?", "not valid try again",
+                       retour_question.NBR_QUESTION);
+    char s[100];
+    snprintf(s, sizeof(s), "en_%03d.txt", numbr);
+    eng_text = load_asset(s);
+  }
+}
 
 int main(void) {
   char language[3]; // 2 characters string, including "\0"
@@ -151,7 +170,6 @@ int main(void) {
   unsigned save_choice;
   save current_save;
   save available_saves[MAX_SAVES];
-  tableau_question retour_question;
   // Language selection
   language_selection(language);
 
@@ -192,23 +210,6 @@ int main(void) {
     save_save(SAVE_PATH, save_fn, current_save);
   }
   init_game(current_save);
-
-  char *eng_text = load_asset("en_000.txt");
-  int numbr;
-  while (eng_text != NULL) {
-    retour_question = parse(eng_text);
-    for (int question = 1; question <= retour_question.NBR_QUESTION;
-         question++) {
-      printf(" %d) %s\n", question,
-             retour_question.questions[question].Question);
-    }
-    free(eng_text);
-    numbr = get_choice("What do you choose?", "not valid try again",
-                       retour_question.NBR_QUESTION);
-    char s[100];
-    snprintf(s, sizeof(s), "en_%03d.txt", numbr);
-    eng_text = load_asset(s);
-  }
 
   return 0;
 }
