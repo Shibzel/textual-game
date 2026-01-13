@@ -6,6 +6,7 @@
 // Constants
 #define DELIMITER "---"
 #define NUM_MAX_QUESTION 10
+#define NEW_LINE "\n"
 
 typedef struct {
     char* Question;
@@ -17,7 +18,7 @@ typedef struct {
     int NBR_QUESTION;
 } tableau_question;
 
-tableau_question parse(char *file_content) {
+tableau_question parse_question_bloc(char *file_content) {
     
     // Sanity Check
     if (file_content == NULL)
@@ -85,4 +86,32 @@ tableau_question parse(char *file_content) {
     }
 
     return returned_quests;
+}
+
+
+const char* get_line_content(const char* file_content, int line_number) {
+    // Sanity checks cause I'm schizo
+    if (file_content == NULL || line_number <= 0) return NULL;
+
+    const char* current = file_content;
+    const char* line_start = current;
+    int current_line = 1;
+
+    while (*current != '\0') {
+        if (*current == NEW_LINE[0]) {  // Found newline
+            if (current_line == line_number) {
+                return line_start;  // Return start of this line
+            }
+            line_start = current + 1;
+            current_line++;
+        }
+        current++;
+    }
+
+    // Check last line (no trailing newline)
+    if (current_line == line_number && line_start != file_content) {
+        return line_start;
+    }
+
+    return NULL;  // Line not found
 }

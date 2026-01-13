@@ -153,7 +153,7 @@ void init_game(save current_save, char language[3]) {
   snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
   eng_text = load_asset(s);
   while (eng_text != NULL) {
-    retour_question = parse(eng_text);
+    retour_question = parse_question_bloc(eng_text);
     for (int question = 1; question <= retour_question.NBR_QUESTION;
          question++) {
       printf(" %d) %s\n", question,
