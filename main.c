@@ -5,9 +5,11 @@
 #include "file_loader.h"
 #include "file_printer.h"
 
-#define SAVE_FP "./saves"
-#define ASSETS_FP "./assets"
-#define ASSET_FILE "%c_%c.txt"
+#define SAVE_FP "./saves/"
+#define ASSETS_FP "./assets/"
+#define ASSET_FILE_FORMAT "%s_%d.txt"
+#define SAVE_FILE_FORMAT "save_%d.txt"
+#define MAX_NAME_SIZE 32
 
 
 unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
@@ -42,48 +44,69 @@ int mkdir_if_not_exists(char *path) {
     return status;
 }
 
+int save_exists(char *assets_path) {
+    // TODO: Implement
+}
+
 void init_save(char *save_path, char *name) {
     mkdir_if_not_exists(save_path);
 
     // TODO: Implement
 }
 
-int main(void) {
+void language_selection(char *language) {
     unsigned choice;
-
-    // Language selection
-    char language[3];
 
     choice = get_choice(
         "Please chose a language / Merci de choisir un langage :\n 1) English\n 2) Français\nInput a value / Entrez une valeur [1-2] : ",
-        "Bad input. Try again",
+        "Bad input. Try again / Mauvaise entrée. Réessayez",
         2
     );
     switch (choice) {
         case 1:
-            strcpy(language, "en");
+            strcpy(language, "en"); 
             break;
         case 2:
             strcpy(language, "fr");
             break;
     }
+}
+
+char *get_name(char *name, char *display, char *bad_input) {
+    unsigned unvalid;
+
+    do {
+        unvalid = 0;
+
+        printf(display);
+        while (getchar() == '\n');
+        fgets(name, MAX_NAME_SIZE, stdin);
+        printf("Do you want to name yourself '%s' ?", name); // TODO: Untranslated text
+        if (get_choice(
+            "This is not reversible without creating a new save.\n 1) Yes\n2) No\nChose [1-%d] : ",
+            "Bad input. Try again.",
+            2) == 2
+        ) {
+            unvalid = 1;
+        }
+    } while (unvalid);
+    
+    return name;
+}
+
+int main(void) {
+    char language[3]; // 2 characters string, including "\0"
+    char name[MAX_NAME_SIZE+1]; // 32 char max
+
+    // Language selection
+    language_selection(language);
 
     // Save selection
+    get_name(name, "How do you want to name yourself ?", "");
     // TODO: Implement
 
     // Resume/start the game
     // TODO: Implement
 
-
-    // mkdir_if_not_exists(SAVE_FP);
-
-    // char *eng_text = load_asset("english.txt");
-    // if (eng_text != NULL) {
-    //     printf("yes loaded, mtn test de print \n");
-    //     print_lines(eng_text);
-    //     free(eng_text);
-    // }
-    // puts("Hello world!");
-
-    // get_choice("What do you do ? [1-%d] : ", "Bad input. Try again.", 5);
+    return 0;
 }
