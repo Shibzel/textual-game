@@ -1,0 +1,8 @@
+Entrée invalide. Réessayez.
+Que faites vous ? [1-%d] :
+Ci-contre les sauvegardes :
+ %d) Nom d'utilisateur : %s - Temps écoulé : %ds\n
+ %d) Nouvelle sauvegarde\n
+Choisissez [1-%d] : 
+Comment voulez vous vous nommer ?\Entrez un nom : 
+Voulez vous vous nommer '%s' ?\Il ne sera pas modifiable à moins de créer une nouvelle sauvegarde.\n 1) Oui\n 2) Non\nChoisissez [1-%d] : 
