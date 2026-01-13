@@ -142,11 +142,18 @@ void save_save(char *save_path, char *save_fn, save current_save) {
   fclose(fptr);
 }
 
-void init_game(save current_save) {
+void init_game(save current_save, char language[3]) {
   tableau_question retour_question;
-  puts("Itadakimas bismillah les gens");
-  char *eng_text = load_asset("en_000.txt");
+
+  char *eng_text;
   int numbr;
+  char s[100];
+
+  puts("Itadakimas bismillah les gens");
+  numbr = 0;
+  snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
+  printf("Loaded file : %s",s);
+  eng_text = load_asset(s);
   while (eng_text != NULL) {
     retour_question = parse(eng_text);
     for (int question = 1; question <= retour_question.NBR_QUESTION;
@@ -157,7 +164,7 @@ void init_game(save current_save) {
     free(eng_text);
     numbr = get_choice("What do you choose?", "not valid try again",
                        retour_question.NBR_QUESTION);
-    char s[100];
+
     snprintf(s, sizeof(s), "en_%03d.txt", numbr);
     eng_text = load_asset(s);
   }
@@ -209,7 +216,7 @@ int main(void) {
 
     save_save(SAVE_PATH, save_fn, current_save);
   }
-  init_game(current_save);
+  init_game(current_save, language);
 
   return 0;
 }
