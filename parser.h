@@ -4,13 +4,13 @@
 #define NUM_MAX_QUESTION 10
 
 typedef struct {
-  char* Question;
-  int Code;
+    char* Question;
+    int Code;
 }question;
 
 typedef struct {
-  question questions[NUM_MAX_QUESTION];
-  int NBR_QUESTION;
+    question questions[NUM_MAX_QUESTION];
+    int NBR_QUESTION;
 }tableau_question;
 
 
