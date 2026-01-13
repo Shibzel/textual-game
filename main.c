@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h> // Pour strcpy
 
-#include "file_loader.h"
+#include "files.h"
 #include "parser.h"
 
 #define SAVE_PATH "./saves/"
@@ -42,30 +42,6 @@ unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
 
   return input;
 }
-
-#include <sys/stat.h>
-int mkdir_if_not_exists(char *path) {
-  // TODO: Déplacer cette fonction dans un module
-  int status = 0;
-  int exists = 0;
-
-  struct stat buffer;
-  exists = !stat(path, &buffer);
-
-  if (!exists) {
-    status = mkdir(path, 0755);
-  }
-  return status;
-}
-#include <stdio.h>
-#ifdef _WIN32
-#include <io.h>
-#define ACCESS _access
-#else
-#include <unistd.h>
-#define ACCESS access
-#endif
-int file_exists(const char *path) { return ACCESS(path, 0) == 0; }
 
 void language_selection(char *language) {
   unsigned choice;
