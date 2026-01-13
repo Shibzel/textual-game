@@ -2,7 +2,33 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "file_loader.h"
+#include "files.h"
+
+#include <stdio.h>
+#ifdef _WIN32
+#include <io.h>
+#define ACCESS _access
+#else
+#include <unistd.h>
+#define ACCESS access
+#endif
+
+
+int mkdir_if_not_exists(char *path) {
+  // TODO: Déplacer cette fonction dans un module
+  int status = 0;
+  int exists = 0;
+
+  struct stat buffer;
+  exists = !stat(path, &buffer);
+
+  if (!exists) {
+    status = mkdir(path, 0755);
+  }
+  return status;
+}
+
+int file_exists(const char *path) { return ACCESS(path, 0) == 0; }
 
 char* load_asset(const char *filename) {
     // Variables 
