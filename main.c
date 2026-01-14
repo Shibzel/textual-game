@@ -4,27 +4,9 @@
 
 #include "files.h"
 #include "parser.h"
-
-#define SAVE_PATH "./saves/"
-#define ASSETS_FP "./assets/"
-#define ASSET_FILE_FORMAT "%s_%d.txt"
-#define SAVE_FILE_FORMAT "save_%d.txt"
-#define SAVE_FILE_LENGTH 11 // meh
-#define MAX_NAME_SIZE 256
-#define MAX_SAVES 3
-#define CURRENT_SAVE_VERSION 1
-#define ITEMS_MAX 100
-#define TEXT_MAX_SIZE 2048
+#include "save_manager.h"
 
 typedef unsigned items[ITEMS_MAX];
-typedef struct {
-  unsigned save_version; // The version of the saving system, in case migration
-                         // is needed.
-  char name[MAX_NAME_SIZE]; // Name of the player and of the save
-  unsigned time_elapsed;    // For statistics and the speedrun counter
-  unsigned status;          // Status of the game, where the player progressed
-  items items;              // The list of items the player has
-} save;
 
 unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
   unsigned input, unvalid;
@@ -41,6 +23,148 @@ unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
   } while (unvalid);
 
   return input;
+}
+
+void extract_text(const char *file_content, int line_number, char *buffer, size_t buffer_size) {
+    const char *raw_line = get_line_content(file_content, line_number);
+    
+    if (!raw_line) {
+        snprintf(buffer, buffer_size, "[MISSING TEXT LINE %d]", line_number);
+        return;
+    }
+
+    size_t i = 0; // Index for buffer
+    size_t j = 0; // Index for raw_line
+
+    while (i < buffer_size - 1 && raw_line[j] != '\0' && raw_line[j] != '\n') {
+        
+        // CRITICAL FIX: Skip Carriage Returns (\r) so the cursor doesn't reset to the left
+        if (raw_line[j] == '\r') {
+            j++;
+            continue;
+        }
+
+        // Handle literal "\n" (backslash + n)
+        if (raw_line[j] == '\\' && raw_line[j + 1] == 'n') {
+            buffer[i++] = '\n';
+            j += 2; 
+        } else {
+            buffer[i++] = raw_line[j++];
+        }
+    }
+    
+    buffer[i] = '\0';
+}
+
+
+char *get_name(char *name, char *display, char *confirmation_display,
+               char *bad_input) {
+  unsigned unvalid;
+  const unsigned MAX_INPUTS = 2;
+
+  do {
+    unvalid = 1;
+
+    printf("%s", display);
+    fflush(stdout);
+    if (scanf("%s", name) == 1) {
+      printf(confirmation_display, name, MAX_INPUTS);
+      fflush(stdout);
+      if (get_choice("", bad_input, MAX_INPUTS) == 1) {
+        unvalid = 0;
+      }
+    }
+  } while (unvalid);
+
+  return name;
+}
+
+void process_save_menu(const char *lang_content, save *available_saves, save *current_save, int unsigned *do_init_save) {
+    char save_fn[50];
+    char text_buf_header[256];
+    char text_buf_item[256];
+    char text_buf_prompt[256];
+    char text_buf_error[256];
+    char text_buf_name_q[256];
+    char text_buf_confirm[512];
+
+    // Added buffer for formatting strings before passing to puts
+    char display_buffer[512]; 
+    
+    int save_choice = 0;
+    
+    // --- LINE MAPPING ---
+    // 1: Error Message
+    // 2: Save Choice Prompt
+    // 3: Header "Here are the saves"
+    // 4: Existing Save Item Format
+    // 5: New Save Item Format
+    // 6: Name Prompt
+    // 7: Confirmation Prompt
+
+    extract_text(lang_content, 3, text_buf_header, sizeof(text_buf_header));
+    puts(text_buf_header); 
+
+    for (int i = 1; i < MAX_SAVES + 1; i++) {
+        sprintf(save_fn, SAVE_FILE_FORMAT, i);
+        
+        if (save_exists(SAVE_PATH, save_fn)) {
+            available_saves[i - 1] = load_save(SAVE_PATH, save_fn);
+            
+            // MATH: Convert seconds to H:M:S
+            int total_seconds = available_saves[i - 1].time_elapsed; 
+            int hours = total_seconds / 3600;
+            int minutes = (total_seconds % 3600) / 60;
+            int seconds = total_seconds % 60;
+
+            extract_text(lang_content, 4, text_buf_item, sizeof(text_buf_item));
+            
+            // Format into buffer, then puts
+            snprintf(display_buffer, sizeof(display_buffer), text_buf_item, i, available_saves[i - 1].name, hours, minutes, seconds);
+            puts(display_buffer);
+
+        } else {
+            extract_text(lang_content, 5, text_buf_item, sizeof(text_buf_item));
+            
+            // Format into buffer, then puts
+            snprintf(display_buffer, sizeof(display_buffer), text_buf_item, i);
+            puts(display_buffer);
+        }
+    }
+
+    extract_text(lang_content, 2, text_buf_prompt, sizeof(text_buf_prompt)); // Prompt
+    extract_text(lang_content, 1, text_buf_error, sizeof(text_buf_error));   // Error
+    
+
+    save_choice = get_choice(text_buf_prompt, text_buf_error, MAX_SAVES);
+
+    // Load or Init Flag
+    sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
+    if (save_exists(SAVE_PATH, save_fn)) {
+        *current_save = available_saves[save_choice - 1]; // Array index is choice - 1
+        *do_init_save = 0;
+    } else {
+        *do_init_save = 1;
+    }
+
+    if (*do_init_save) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) { }
+
+        extract_text(lang_content, 6, text_buf_name_q, sizeof(text_buf_name_q)); // "How to name?"
+        extract_text(lang_content, 7, text_buf_confirm, sizeof(text_buf_confirm)); // "Confirm name?"
+
+        get_name(current_save->name,
+                 text_buf_name_q,
+                 text_buf_confirm,
+                 text_buf_error); // Reusing generic error line 1
+
+        current_save->save_version = CURRENT_SAVE_VERSION;
+        current_save->status = 0;
+        current_save->time_elapsed = 0;
+
+        save_save(SAVE_PATH, save_fn, *current_save);
+    }
 }
 
 void language_selection(char *language) {
@@ -60,63 +184,6 @@ void language_selection(char *language) {
   }
 }
 
-char *get_name(char *name, char *display, char *confirmation_display,
-               char *bad_input) {
-  unsigned unvalid;
-  const unsigned MAX_INPUTS = 2;
-
-  do {
-    unvalid = 1;
-
-    printf("%s", display);
-    if (scanf("%s", name) == 1) {
-      printf(confirmation_display, name, MAX_INPUTS);
-      if (get_choice("", bad_input, MAX_INPUTS) == 1) {
-        unvalid = 0;
-      }
-    }
-  } while (unvalid);
-
-  return name;
-}
-
-int save_exists(char *save_path, char *save_fn) {
-  const unsigned path_length = 512;
-  char file_path[path_length];
-
-  snprintf(file_path, path_length, "%s/%s", save_path, save_fn);
-  return file_exists(file_path);
-}
-
-save load_save(char *save_path, char *save_fn) {
-  // TODO: Implement
-}
-
-char *items_parse(items owned_items) {
-  // TODO: Implement
-  return "Hello, world!";
-}
-
-void save_save(char *save_path, char *save_fn, save current_save) {
-  char buffer[TEXT_MAX_SIZE];
-  char file_path[512];
-  snprintf(file_path, sizeof(file_path), "%s/%s", save_path, save_fn);
-  FILE *fptr = fopen(file_path, "wb");
-
-  mkdir_if_not_exists(save_path);
-  snprintf(buffer, TEXT_MAX_SIZE, "%d\n%s\n%d\n%d\n%s",
-           current_save.save_version, current_save.name,
-           current_save.time_elapsed, current_save.status,
-           items_parse(current_save.items));
-
-  fptr = fopen(file_path, "wb");
-  // if (fptr == NULL) {
-  //     perror("Erreur lors de l'ouverture du fichier");
-  //     return;
-  // }
-  fwrite(buffer, sizeof(char), strlen(buffer), fptr);
-  fclose(fptr);
-}
 
 void init_game(save current_save, char language[3]) {
   tableau_question retour_question;
@@ -145,52 +212,54 @@ void init_game(save current_save, char language[3]) {
 }
 
 int main(void) {
-  char language[3]; // 2 characters string, including "\0"
-  unsigned do_init_save = 0;
-  char save_fn[SAVE_FILE_LENGTH]; // Save file name
-  unsigned save_choice;
-  save current_save;
-  save available_saves[MAX_SAVES];
-  // Language selection
-  language_selection(language);
+    char language[3]; // 2 characters string, including "\0"
+    unsigned do_init_save = 0;
+    char save_fn[SAVE_FILE_LENGTH]; // Save file name
+    unsigned save_choice;
+    save current_save;
+    save available_saves[MAX_SAVES];
+    // Language selection
+    language_selection(language);
 
-  // Save selection
-  puts("Here are the following saves :"); // TODO: Not translated
-  for (int i = 1; i < MAX_SAVES + 1; i++) {
-    sprintf(save_fn, SAVE_FILE_FORMAT, i);
-    if (save_exists(SAVE_PATH, save_fn)) {
-      available_saves[i - 1] = load_save(SAVE_PATH, save_fn);
-      printf(" %d) Username : %s - Time elapsed : %ds\n", i,
-             available_saves[i].name,
-             available_saves[0].time_elapsed); // TODO: Convert seconds into
-                                               // hours, minutes and seconds
-    } else {
-      printf(" %d) New save\n", i);
-    }
-  }
-  save_choice =
-      get_choice("Chose a save [1-%d] : ", "Bad input. Try again.", MAX_SAVES);
-  sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
-  if (save_exists(SAVE_PATH, save_fn)) {
-    current_save = available_saves[save_choice];
-  } else {
-    do_init_save = 1;
-  }
+    //// Save selection
+    //puts("Here are the following saves :"); // TODO: Not translated
+    //for (int i = 1; i < MAX_SAVES + 1; i++) {
+    //    sprintf(save_fn, SAVE_FILE_FORMAT, i);
+    //    if (save_exists(SAVE_PATH, save_fn)) {
+    //        available_saves[i - 1] = load_save(SAVE_PATH, save_fn);
+    //        printf(" %d) Username : %s - Time elapsed : %ds\n", i,
+    //               available_saves[i].name,
+    //               available_saves[0].time_elapsed); // TODO: Convert seconds into
+    //                                                 // hours, minutes and seconds
+    //    } else {
+    //        printf(" %d) New save\n", i);
+    //    }
+    //}
+    //save_choice =
+    //    get_choice("Chose a save [1-%d] : ", "Bad input. Try again.", MAX_SAVES);
+    //sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
+    //if (save_exists(SAVE_PATH, save_fn)) {
+    //    current_save = available_saves[save_choice];
+    //} else {
+    //    do_init_save = 1;
+    //}
+//
+    //// Resume/start the game
+    //if (do_init_save) {
+    //    get_name(current_save.name,
+    //             "How do you want to name yourself ?\nEnter a name : ",
+    //             "Do you want to name yourself '%s' ?\nThis is not reversible "
+    //             "without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : ",
+    //             "Bad input. Try again."); // TODO: Not translated
+    //    current_save.save_version = CURRENT_SAVE_VERSION;
+    //    current_save.status = 000;
+    //    current_save.time_elapsed = 0;
+//
+    //    save_save(SAVE_PATH, save_fn, current_save);
+    //}
+    char* file_content = load_asset(!strcmp("en", language) ? "en_main.txt" : "fr_main.txt");
+    process_save_menu(file_content, available_saves, &current_save, &do_init_save);
+    init_game(current_save, language);
 
-  // Resume/start the game
-  if (do_init_save) {
-    get_name(current_save.name,
-             "How do you want to name yourself ?\nEnter a name : ",
-             "Do you want to name yourself '%s' ?\nThis is not reversible "
-             "without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : ",
-             "Bad input. Try again."); // TODO: Not translated
-    current_save.save_version = CURRENT_SAVE_VERSION;
-    current_save.status = 000;
-    current_save.time_elapsed = 0;
-
-    save_save(SAVE_PATH, save_fn, current_save);
-  }
-  init_game(current_save, language);
-
-  return 0;
+    return 0;
 }

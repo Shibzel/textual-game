@@ -90,19 +90,17 @@ tableau_question parse_question_bloc(char *file_content) {
 
 
 const char* get_line_content(const char* file_content, int line_number) {
-    // Sanity checks cause I'm schizo
     if (file_content == NULL || line_number <= 0) return NULL;
 
     const char* current = file_content;
     const char* line_start = current;
-    int current_line;;
+    int current_line = 1;
 
-    // Start
-    current_line = 1;
     while (*current != '\0') {
-        if (*current == NEW_LINE[0]) {  // Found newline
+        // Assuming NEW_LINE is defined, otherwise just use '\n'
+        if (*current == '\n') { 
             if (current_line == line_number) {
-                return line_start;  // Return start of this line
+                return line_start;
             }
             line_start = current + 1;
             current_line++;
@@ -110,11 +108,11 @@ const char* get_line_content(const char* file_content, int line_number) {
         current++;
     }
 
-    // Check last line (no trailing newline)
-    if (current_line == line_number && line_start != file_content) {
+    // FIX: Removed the "&& line_start != file_content" check.
+    // That check made it fail if the file only had 1 line.
+    if (current_line == line_number) {
         return line_start;
     }
 
-    return NULL;  // Line not found
+    return NULL;
 }
-

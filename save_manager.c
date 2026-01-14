@@ -2,22 +2,7 @@
 #include "files.h"
 
 
-unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
-  unsigned input, unvalid;
 
-  do {
-    unvalid = 0;
-
-    printf(display, max_inputs);
-    if (scanf("%u", &input) != 1 || input > max_inputs) {
-      unvalid = 1;
-      puts(bad_input);
-    }
-    printf("\n");
-  } while (unvalid);
-
-  return input;
-}
 
 
 int save_exists(char *save_path, char *save_fn) {
