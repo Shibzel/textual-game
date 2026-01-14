@@ -1,8 +1,8 @@
 Bad input. Try again.
 What do you do ? [1-%d] :
 Here are the following saves :
- %d) Username : %s - Time elapsed : %ds@
- %d) New save@
+ %d) Username : %s - Time elapsed : %ds\n
+ %d) New save\n
 Chose a save [1-%d] : 
-How do you want to name yourself ?@Enter a name : 
-Do you want to name yourself '%s' ?@This is not reversible without creating a new save.@ 1) Yes@ 2) No@Chose [1-%d] : 
+How do you want to name yourself ?\nEnter a name : 
+Do you want to name yourself '%s' ?\nThis is not reversible without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : 
