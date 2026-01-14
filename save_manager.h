@@ -18,19 +18,19 @@
 
 typedef unsigned items[ITEMS_MAX];
 typedef struct {
-  unsigned save_version; // The version of the saving system, in case migration
-                         // is needed.
-  char name[MAX_NAME_SIZE]; // Name of the player and of the save
-  unsigned time_elapsed;    // For statistics and the speedrun counter
-  unsigned status;          // Status of the game, where the player progressed
-  items items;              // The list of items the player has
+    unsigned save_version; // The version of the saving system, in case migration
+                          // is needed.
+    char name[MAX_NAME_SIZE]; // Name of the player and of the save
+    unsigned time_elapsed;    // For statistics and the speedrun counter
+    unsigned status;          // Status of the game, where the player progressed
+    items items;              // The list of items the player has
 } save;
 
-unsigned get_choice(char *display, char *bad_input, unsigned max_inputs);
 
 int save_exists(char *save_path, char *save_fn);
 save load_save(char *save_path, char *save_fn);
 char *items_parse(items owned_items);
 void save_save(char *save_path, char *save_fn, save current_save);
+char *get_name(char *name, char *display, char *confirmation_display, char *bad_input);
 
 #endif // SAVE_MANAGER_H

@@ -7,7 +7,8 @@ CFLAGS = -Wall -Wextra -g
 # The name of the final executable
 TARGET = build/jeu
 
-SRC = main.c parser.c files.c save_manager.c
+
+SRC = main.c parser.c save_manager.c inputs.c files.c
 
 OBJ = $(SRC:.c=.o)
 
