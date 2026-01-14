@@ -6,3 +6,6 @@ Here are the following saves :
 Chose a save [1-%d] : 
 How do you want to name yourself ?\nEnter a name : 
 Do you want to name yourself '%s' ?\nThis is not reversible without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : 
+This is an alpha. Bugs, segmentation faults and memory leaks are expected.
+You found '%s'! It is now in your inventory.
+You found the following items :\n
