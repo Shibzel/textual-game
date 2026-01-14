@@ -94,17 +94,13 @@ void process_save_menu(const char *lang_content, save *available_saves, save *cu
         }
     }
 
-    extract_text(lang_content, 2, text_buf_prompt, sizeof(text_buf_prompt)); 
- 
+    extract_text(lang_content, 6, text_buf_prompt, sizeof(text_buf_prompt)); 
 
     char formatted_error[256];
     extract_text(lang_content, 1, text_buf_error, sizeof(text_buf_error));
     snprintf(formatted_error, sizeof(formatted_error), text_buf_error, MAX_SAVES);
-    
+
     save_choice = get_choice(text_buf_prompt, formatted_error, MAX_SAVES);
-
-
-
 
     sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
     if (save_exists(SAVE_PATH, save_fn)) {
@@ -114,20 +110,16 @@ void process_save_menu(const char *lang_content, save *available_saves, save *cu
         *do_init_save = 1;
     }
 
+
+
     if (*do_init_save) {
-        extract_text(lang_content, 6, text_buf_name_q, sizeof(text_buf_name_q));
-        extract_text(lang_content, 7, text_buf_confirm, sizeof(text_buf_confirm));
+        extract_text(lang_content, 7, text_buf_prompt, sizeof(text_buf_confirm));
+        extract_text(lang_content, 8, text_buf_confirm, sizeof(text_buf_confirm));
 
-        // Now this will wait for user input correctly
-        get_name(current_save->name,
-                 text_buf_name_q,
-                 text_buf_confirm,
-                 text_buf_error); 
-
+        get_name(current_save->name, text_buf_prompt, text_buf_confirm, formatted_error);
         current_save->save_version = CURRENT_SAVE_VERSION;
         current_save->status = 0;
         current_save->time_elapsed = 0;
-
         save_save(SAVE_PATH, save_fn, *current_save);
     }
 }
