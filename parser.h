@@ -6,12 +6,12 @@
 typedef struct {
     char* Question;
     int Code;
-}question;
+} question;
 
 typedef struct {
     question questions[NUM_MAX_QUESTION];
     int NBR_QUESTION;
-}tableau_question;
+} tableau_question;
 
 
 tableau_question parse_question_bloc(char *file_content);

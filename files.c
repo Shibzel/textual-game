@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 #include "files.h"
 
@@ -15,17 +14,17 @@
 
 
 int mkdir_if_not_exists(char *path) {
-  // TODO: Déplacer cette fonction dans un module
-  int status = 0;
-  int exists = 0;
+    // TODO: Déplacer cette fonction dans un module
+    int status = 0;
+    int exists = 0;
 
-  struct stat buffer;
-  exists = !stat(path, &buffer);
+    struct stat buffer;
+    exists = !stat(path, &buffer);
 
-  if (!exists) {
-    status = mkdir(path, 0755);
-  }
-  return status;
+    if (!exists) {
+        status = mkdir(path, 0755);
+    }
+    return status;
 }
 
 int file_exists(const char *path) { return ACCESS(path, 0) == 0; }
@@ -38,7 +37,7 @@ char* load_asset(const char *filename) {
     char *buffer;
 
 
-    // 1. Construct path to assets subfolder
+    // Construct path to assets subfolder
     snprintf(path, sizeof(path), "assets/%s", filename);
 
     // Open the file
@@ -48,7 +47,7 @@ char* load_asset(const char *filename) {
         return NULL;
     }
 
-    //  Get file size 
+    // Get file size 
     if (stat(path, &st) != 0) {
         perror("Error getting file size");
         fclose(fp);
