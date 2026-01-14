@@ -6,3 +6,6 @@ Ci-contre les sauvegardes :
 Choisissez [1-%d] : 
 Comment voulez vous vous nommer ?\Entrez un nom : 
 Voulez vous vous nommer '%s' ?\Il ne sera pas modifiable à moins de créer une nouvelle sauvegarde.\n 1) Oui\n 2) Non\nChoisissez [1-%d] : 
+Ceci est une alpha. Des bugs, des fautes de segmentation et des fuites de mémoires sont attendus.
+Vous avez trouvé '%s' ! L'objet devrait se trouver dans votre inventaire.
+Vous avez trouvé les objets suivants :\n
