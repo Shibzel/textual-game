@@ -95,8 +95,10 @@ const char* get_line_content(const char* file_content, int line_number) {
 
     const char* current = file_content;
     const char* line_start = current;
-    int current_line = 1;
+    int current_line;;
 
+    // Start
+    current_line = 1;
     while (*current != '\0') {
         if (*current == NEW_LINE[0]) {  // Found newline
             if (current_line == line_number) {
@@ -115,3 +117,4 @@ const char* get_line_content(const char* file_content, int line_number) {
 
     return NULL;  // Line not found
 }
+
