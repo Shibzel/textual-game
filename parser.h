@@ -14,6 +14,9 @@ typedef struct {
 }tableau_question;
 
 
-tableau_question parse(char *file_content);
+tableau_question parse_question_bloc(char *file_content);
+
+
+const char* get_line_content(const char* file_content, int line_number);
 
 #endif
