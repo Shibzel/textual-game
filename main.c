@@ -23,6 +23,36 @@ typedef unsigned items[ITEMS_MAX];
 
 
 
+void extract_text(const char *file_content, int line_number, char *buffer, size_t buffer_size) {
+    const char *raw_line = get_line_content(file_content, line_number);
+    
+    if (!raw_line) {
+        snprintf(buffer, buffer_size, "[MISSING TEXT LINE %d]", line_number);
+        return;
+    }
+
+    size_t i = 0; // Index for buffer
+    size_t j = 0; // Index for raw_line
+
+    while (i < buffer_size - 1 && raw_line[j] != '\0' && raw_line[j] != '\n') {
+        
+        // Skip Carriage Returns (\r) so the cursor doesn't reset to the left
+        if (raw_line[j] == '\r') {
+            j++;
+            continue;
+        }
+
+        // Handle literal "\n" (backslash + n)
+        if (raw_line[j] == '\\' && raw_line[j + 1] == 'n') {
+            buffer[i++] = '\n';
+            j += 2; 
+        } else {
+            buffer[i++] = raw_line[j++];
+        }
+    }
+    
+    buffer[i] = '\0';
+}
 
 void process_save_menu(const char *lang_content, save *available_saves, save *current_save, int unsigned *do_init_save) {
     char save_fn[50];
@@ -127,7 +157,8 @@ void init_game(save current_save, char language[3]) {
         retour_question = parse_question_bloc(eng_text);
         for (int question = 1; question <= retour_question.NBR_QUESTION;
             question++) {
-        printf(" %d) %s\n", question,
+                
+                printf(" %d) %s\n", question,
                 retour_question.questions[question].Question);
         }
         free(eng_text);
