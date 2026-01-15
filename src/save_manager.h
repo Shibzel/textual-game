@@ -15,6 +15,8 @@
 #define CURRENT_SAVE_VERSION 1
 #define ITEMS_MAX 100
 #define TEXT_MAX_SIZE 2048
+#define ITEMS_FILE_LENGTH ITEMS_MAX*(2 + 1)+1
+#define ITEMS_FILE_LINE_START 5
 
 typedef unsigned items[ITEMS_MAX];
 typedef struct {
@@ -29,7 +31,8 @@ typedef struct {
 
 int save_exists(char *save_path, char *save_fn);
 save load_save(char *save_path, char *save_fn);
-char *items_parse(items owned_items);
+char *items_parse_to_file(items items_array);
+void items_parse_to_array(items *items_array, char *raw_items);
 void save_save(char *save_path, char *save_fn, save current_save);
 char *get_name(char *name, char *display, char *confirmation_display, char *bad_input);
 

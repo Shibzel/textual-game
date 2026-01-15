@@ -1,6 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "save_manager.h"
 #include "files.h"
-
+#include "parser.h"
 
 
 int save_exists(char *save_path, char *save_fn) {
@@ -15,9 +18,34 @@ save load_save(char *save_path, char *save_fn) {
     // TODO: Implement
 }
 
-char *items_parse(items owned_items) {
-    // TODO: Implement
-    return "Hello, world!";
+char *items_parse_to_file(items items_array) {
+    char *buffer = malloc(ITEMS_FILE_LENGTH);  // Items are stored under the format 00\n, a hundred times maximum
+    if (buffer == NULL) {
+        perror("Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    buffer[0] = '\0';  // The array can be empty
+    unsigned i = 0;
+    while (
+        items_array[i] != 0  // I00 does not exist, so 0 means it is the end of the array
+        && i < ITEMS_MAX
+    ) {
+        char temp[4]; // "00\n" + '\0'
+        snprintf(temp, sizeof(temp), "%02d\n", items_array[i]);
+        strcat(buffer, temp);  // Concatenation
+        i++;
+    }
+
+    return buffer;
+}
+
+void items_parse_to_array(items *items_array, char *raw_items) {
+    // unsigned i = ITEMS_FILE_LINE_START;
+    // while (i < ITEMS_MAX) {
+    //     char *item_line = get_line_content(raw_items, i);
+
+    // }
 }
 
 void save_save(char *save_path, char *save_fn, save current_save) {
@@ -27,10 +55,12 @@ void save_save(char *save_path, char *save_fn, save current_save) {
     FILE *fptr = fopen(file_path, "wb");
 
     mkdir_if_not_exists(save_path);
+    char *parsed_items = items_parse_to_file(current_save.items);
     snprintf(buffer, TEXT_MAX_SIZE, "%d\n%s\n%d\n%d\n%s",
             current_save.save_version, current_save.name,
             current_save.time_elapsed, current_save.status,
-            items_parse(current_save.items));
+            parsed_items);
+    free(parsed_items);
 
     fptr = fopen(file_path, "wb");
     if (fptr == NULL) {

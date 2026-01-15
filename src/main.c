@@ -169,6 +169,14 @@ void init_game(save current_save, char language[3]) {
     }
 }
 
+// int main(void) {
+//     items current_items = {12, 3, 5, 7, 0};
+//     char *text = items_parse_to_file(current_items);
+//     puts(text);
+//     free(text);
+//     return 0;
+// }
+
 int main(void) {
     char language[3]; // 2 characters string, including "\0"
     unsigned do_init_save = 0;
