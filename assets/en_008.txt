@@ -1,10 +1,8 @@
 An old man walks towards you and tries to talk to you. But he coughs uncontrollably before falling on the ground and passing out.
-
 Another old man walks in - ignoring the corpse - and says :
 "You cannot leave here by yourself, this place is cursed.
 Unless you help me find my diapers, I won't help you get out."
-
-## What do you do ?
-1. He is your only way to get out of here. Help him find his diapers : [[006]]
-2. Punch the old man : [[007]]
-3. Bring him his diapers : [[U01]]:[[008]]
+---
+He is your only way to get out of here. Help him find his diapers;006
+Punch the old man;007
+Bring him his diapers;U01;008

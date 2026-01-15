@@ -1,8 +1,5 @@
-Untied and finally free, you run towards the exit. Leaving the man behind.
-
-Walking though a hallway, you find a key and pick it up from the ground.
+You patiently wait until he wakes up. So he does. He looks at you, confused.
+"Hey, why are you strapped on a chair ? Do you need help ? What kind of freak did this to you ?", he says.
 ---
-Try to find an exit;004
-Look around;005
----
-I01
+1. "Hey, man. There is this crazy dude that kidnapped me. I really need you to untie me!";001
+"No.";003

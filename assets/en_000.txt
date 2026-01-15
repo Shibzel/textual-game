@@ -1,8 +1,7 @@
-You wake up, strapped to a chair in what seems to be a garage. You cannot really tell because you are blindfolded. A man steps closer to you, slaps your head and removes the tissue that is obstructing you view.
-
+You wake up, strapped to a chair in what seems to be a garage. You cannot really tell because you are blindfolded. A man steps closer to you and dramatically removes the tissue that is obstructing you view. 
+He is wearing a "World’s Best Kidnapper" T-shirt (which is not true, by the way-he forgot to tie your left foot). He proceeds to rumbles about his evil plan.
 You know what he wants : to extort money from your parents. This is a ransom situation. Your family is extremely wealthy so you know this was going to happen some day.
-
-However, something unexpected happens : he trips on a wire on the floor, knocks his head against your chair and falls unconscious.
+However, something unexpected happens : he trips on his own shoelaces, knocking himself out cold. You observe him and see an opportunity.
 ---
 Try to untie yourself;001
 Wait patiently until he wakes up;002

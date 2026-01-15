@@ -1,8 +1,5 @@
 You clench your fist and swing. Your knuckles connect with the old man’s nose, and he stumbles backward, clutching his face. "Ow! That was uncalled for!" he whines, but there’s a glint in his eye - almost like he’s impressed.
-
 He wipes a trickle of blood from his nostril and grins. "Fine. No diapers, no help. But since you’re clearly the violent type, maybe you’ll like what’s behind that door." He points to a heavy oak door at the end of the hallway, now slightly ajar. A faint, rhythmic thumping echoes from inside.
-
-What do you do?
-
-1. Storm toward the door and kick it open: [[015]]
-2. Ignore him and go back to searching for an exit: [[004]]
+---
+Storm toward the door and kick it open;015
+Ignore him and go back to searching for an exit;004

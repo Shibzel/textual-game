@@ -1,8 +1,6 @@
 Untied and finally free, you run towards the exit. Leaving the man behind.
-
 Walking though a hallway, you find a key and pick it up from the ground.
 ---
 Try to find an exit;004
 Look around;005
----
-Round key;I01
+I01

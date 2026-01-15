@@ -1,7 +1,5 @@
 "Well, even if you're against it, I am not going to let you rot in here..."
-
 He moves towards you and trips again on his own shoelaces, falling down, knocking his head on your chair, unconscious.
-
-## What do you do ?
-1. Try to untie yourself : [[001]]
-2. Wait patiently until he wakes up : [[002]]
+---
+Try to untie yourself;001
+Wait patiently until he wakes up;002

@@ -1,4 +1,2 @@
 You open the doors that are not locked, you look everywhere, every room, though hallways, kitchens, bedrooms, and there seem to be an infinity of them. You can't seem to find an exit. This place is way too big and labyrinth like to be a simple house.
-
-## What do you do ?
-1) Rest in the room you are in : [[008]]
+Rest in the room you are in;008
