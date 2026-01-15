@@ -132,7 +132,7 @@ void output_c_by_c(const char *buffer) {
     if (buffer == NULL) return;
 
     int skip_delay = 0;
-    start_sound("typing.wav");
+    start_sound("assets/sounds/typing.wav");
 
     while (*buffer) {
         // Check if a key was pressed to skip
