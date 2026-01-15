@@ -41,11 +41,26 @@ char *items_parse_to_file(items items_array) {
 }
 
 void items_parse_to_array(items *items_array, char *raw_items) {
-    // unsigned i = ITEMS_FILE_LINE_START;
-    // while (i < ITEMS_MAX) {
-    //     char *item_line = get_line_content(raw_items, i);
+    unsigned i = ITEMS_FILE_LINE_START;
 
-    // }
+    while (i < ITEMS_MAX) {
+        char *item_line = get_line_content(raw_items, i);
+
+        if (item_line == NULL) {
+            *items_array[i] = 0;
+            break;
+        }
+
+        if (sscanf(item_line, "%u", items_array[i]) != 1) {
+            *items_array[i] = 0;
+            break;
+        }
+
+        i++;
+    }
+    if (i < ITEMS_MAX) {
+        *items_array[i] = 0;
+    }
 }
 
 void save_save(char *save_path, char *save_fn, save current_save) {

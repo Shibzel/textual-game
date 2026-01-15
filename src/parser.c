@@ -89,11 +89,11 @@ tableau_question parse_question_bloc(char *file_content) {
 }
 
 
-const char* get_line_content(const char* file_content, int line_number) {
+char* get_line_content(char* file_content, int line_number) {
     if (file_content == NULL || line_number <= 0) return NULL;
 
-    const char* current = file_content;
-    const char* line_start = current;
+    char* current = file_content;
+    char* line_start = current;
     int current_line = 1;
 
     while (*current != '\0') {

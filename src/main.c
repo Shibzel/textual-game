@@ -7,9 +7,6 @@
 #include "save_manager.h"
 #include "inputs.h"
 
-typedef unsigned items[ITEMS_MAX];
-
-
 #define SAVE_PATH "./saves/"
 #define ASSETS_FP "./assets/"
 #define ASSET_FILE_FORMAT "%s_%d.txt"
@@ -169,65 +166,70 @@ void init_game(save current_save, char language[3]) {
     }
 }
 
-// int main(void) {
-//     items current_items = {12, 3, 5, 7, 0};
-//     char *text = items_parse_to_file(current_items);
-//     puts(text);
-//     free(text);
-//     return 0;
-// }
-
 int main(void) {
-    char language[3]; // 2 characters string, including "\0"
-    unsigned do_init_save = 0;
-    char save_fn[SAVE_FILE_LENGTH]; // Save file name
-    unsigned save_choice;
-    save current_save;
-    save available_saves[MAX_SAVES];
-    // Language selection
-    language_selection(language);
-
-
-    //// Save selection
-    //puts("Here are the following saves :"); // TODO: Not translated
-    //for (int i = 1; i < MAX_SAVES + 1; i++) {
-    //    sprintf(save_fn, SAVE_FILE_FORMAT, i);
-    //    if (save_exists(SAVE_PATH, save_fn)) {
-    //        available_saves[i - 1] = load_save(SAVE_PATH, save_fn);
-    //        printf(" %d) Username : %s - Time elapsed : %ds\n", i,
-    //               available_saves[i].name,
-    //               available_saves[0].time_elapsed); // TODO: Convert seconds into
-    //                                                 // hours, minutes and seconds
-    //    } else {
-    //        printf(" %d) New save\n", i);
-    //    }
-    //}
-    //save_choice =
-    //    get_choice("Chose a save [1-%d] : ", "Bad input. Try again.", MAX_SAVES);
-    //sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
-    //if (save_exists(SAVE_PATH, save_fn)) {
-    //    current_save = available_saves[save_choice];
-    //} else {
-    //    do_init_save = 1;
-    //}
-//
-    //// Resume/start the game
-    //if (do_init_save) {
-    //    get_name(current_save.name,
-    //             "How do you want to name yourself ?\nEnter a name : ",
-    //             "Do you want to name yourself '%s' ?\nThis is not reversible "
-    //             "without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : ",
-    //             "Bad input. Try again."); // TODO: Not translated
-    //    current_save.save_version = CURRENT_SAVE_VERSION;
-    //    current_save.status = 000;
-    //    current_save.time_elapsed = 0;
-//
-    //    save_save(SAVE_PATH, save_fn, current_save);
-    //}
-    char* file_content = load_asset(!strcmp("en", language) ? "en_main.txt" : "fr_main.txt");
-    process_save_menu(file_content, available_saves, &current_save, &do_init_save);
-    
-    init_game(current_save, language);
-
+    items items1 = {12, 3, 5, 7, 0};
+    items items2;
+    char *text = items_parse_to_file(items1);
+    puts(text);
+    items_parse_to_array(items2, text);
+    for (int i=0; i<ITEMS_MAX && items2[i] != 0; i++) {
+        printf("%u", items2[i]);
+    }
+    free(text);
     return 0;
 }
+
+// int main(void) {
+//     char language[3]; // 2 characters string, including "\0"
+//     unsigned do_init_save = 0;
+//     char save_fn[SAVE_FILE_LENGTH]; // Save file name
+//     unsigned save_choice;
+//     save current_save;
+//     save available_saves[MAX_SAVES];
+//     // Language selection
+//     language_selection(language);
+
+
+//     //// Save selection
+//     //puts("Here are the following saves :"); // TODO: Not translated
+//     //for (int i = 1; i < MAX_SAVES + 1; i++) {
+//     //    sprintf(save_fn, SAVE_FILE_FORMAT, i);
+//     //    if (save_exists(SAVE_PATH, save_fn)) {
+//     //        available_saves[i - 1] = load_save(SAVE_PATH, save_fn);
+//     //        printf(" %d) Username : %s - Time elapsed : %ds\n", i,
+//     //               available_saves[i].name,
+//     //               available_saves[0].time_elapsed); // TODO: Convert seconds into
+//     //                                                 // hours, minutes and seconds
+//     //    } else {
+//     //        printf(" %d) New save\n", i);
+//     //    }
+//     //}
+//     //save_choice =
+//     //    get_choice("Chose a save [1-%d] : ", "Bad input. Try again.", MAX_SAVES);
+//     //sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
+//     //if (save_exists(SAVE_PATH, save_fn)) {
+//     //    current_save = available_saves[save_choice];
+//     //} else {
+//     //    do_init_save = 1;
+//     //}
+// //
+//     //// Resume/start the game
+//     //if (do_init_save) {
+//     //    get_name(current_save.name,
+//     //             "How do you want to name yourself ?\nEnter a name : ",
+//     //             "Do you want to name yourself '%s' ?\nThis is not reversible "
+//     //             "without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : ",
+//     //             "Bad input. Try again."); // TODO: Not translated
+//     //    current_save.save_version = CURRENT_SAVE_VERSION;
+//     //    current_save.status = 000;
+//     //    current_save.time_elapsed = 0;
+// //
+//     //    save_save(SAVE_PATH, save_fn, current_save);
+//     //}
+//     char* file_content = load_asset(!strcmp("en", language) ? "en_main.txt" : "fr_main.txt");
+//     process_save_menu(file_content, available_saves, &current_save, &do_init_save);
+    
+//     init_game(current_save, language);
+
+//     return 0;
+// }
