@@ -1,19 +1,62 @@
 #include <stdio.h>
 #include "inputs.h"
 
+
 #ifdef _WIN32
     #include <windows.h>
     #include <mmsystem.h>
+    #include <conio.h>
     #pragma comment(lib, "winmm.lib")
     #define SLEEP(ms) Sleep(ms)
 #else
     #include <unistd.h>
     #include <signal.h>
+    #include <termios.h>
+    #include <fcntl.h>
     #define SLEEP(ms) usleep(ms * 1000)
+    static int audio_pid = -1;
 #endif
 
+// --- CROSS-PLATFORM INPUT HELPERS ---
+
 #ifndef _WIN32
-    static int audio_pid = -1;
+// Linux version of kbhit: checks if a key is waiting in the buffer
+int kbhit() {
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+    if(ch != EOF) {
+        ungetc(ch, stdin);
+        return 1;
+    }
+    return 0;
+}
+
+// Linux version of getch: reads one char without waiting for Enter
+int getch() {
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+#else
+    // Windows already has _kbhit() and _getch() in conio.h
+    #define kbhit _kbhit
+    #define getch _getch
 #endif
 
 void start_sound(const char* filename) {
@@ -88,10 +131,19 @@ char *get_name(char *name, char *display, char *confirmation_display,
 void output_c_by_c(const char *buffer) {
     if (buffer == NULL) return;
 
-    // Start the loop before printing
-    start_sound("assets/sounds/typing.wav");
+    int skip_delay = 0;
+    start_sound("typing.wav");
 
     while (*buffer) {
+        // Check if a key was pressed to skip
+        if (!skip_delay && kbhit()) {
+            int ch = getch();
+            if (ch == 10 || ch == 13) { // Enter key
+                skip_delay = 1;
+                stop_sound(); 
+            }
+        }
+
         if (*buffer == '\r') {
             buffer++;
             continue;
@@ -100,11 +152,21 @@ void output_c_by_c(const char *buffer) {
         printf("%c", *buffer);
         fflush(stdout); 
         
-        SLEEP(85); 
+        if (!skip_delay) {
+            SLEEP(85); 
+        }
         buffer++;
     }
 
-    // Stop the loop immediately when text is done
-    stop_sound();
+    if (!skip_delay) stop_sound();
     printf("\n");
+
+    // CRITICAL: Clear the input buffer. 
+    // This prevents the "Enter" you used to skip from triggering the next scanf.
+    #ifdef _WIN32
+        while (_kbhit()) _getch();
+    #else
+        tcflush(STDIN_FILENO, TCIFLUSH); 
+    #endif
 }
+
