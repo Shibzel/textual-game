@@ -11,12 +11,13 @@ unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
     unvalid = 0;
 
     printf(display, max_inputs);
-    if (scanf("%u", &input) != 1 || input > max_inputs) {
+    if (scanf("%u", &input) != 1 || 1 > input || input > max_inputs) {
       unvalid = 1;
       puts(bad_input);
     }
     printf("\n");
   } while (unvalid);
+  while (getchar() != '\n');
 
   return input;
 }
