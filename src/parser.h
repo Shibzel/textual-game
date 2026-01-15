@@ -17,6 +17,6 @@ typedef struct {
 tableau_question parse_question_bloc(char *file_content);
 
 
-const char* get_line_content(const char* file_content, int line_number);
+char* get_line_content(char* file_content, int line_number);
 
 #endif
