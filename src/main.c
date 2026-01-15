@@ -126,9 +126,7 @@ void init_game(save current_save, char language[3]) {
     numbr = 0;
     snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
     eng_text = load_asset(s);
-    inputs = load_asset(!strcmp("en", language) ? "en_main.txt" : "fr_main.txt");
-    extract_text(inputs, 1, error, sizeof(error));
-    extract_text(inputs, 2, display, sizeof(display));
+  
     while (eng_text != NULL) {
         retour_question = parse_question_bloc(eng_text);
         for (int question = 1; question <= retour_question.NBR_QUESTION;
@@ -137,7 +135,7 @@ void init_game(save current_save, char language[3]) {
                 retour_question.questions[question].Question);
         }
         free(eng_text);
-        numbr = get_choice(display, error,
+        numbr = get_choice("What do you choose?", "not valid try again",
                         retour_question.NBR_QUESTION);
 
         snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
