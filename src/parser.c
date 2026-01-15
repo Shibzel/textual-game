@@ -90,11 +90,11 @@ tableau_question parse_question_bloc(char *file_content) {
 }
 
 
-char* get_line_content(char* file_content, int line_number) {
+const char* get_line_content(const char* file_content, int line_number) {
     if (file_content == NULL || line_number <= 0) return NULL;
 
-    char* current = file_content;
-    char* line_start = current;
+    const char* current = file_content;
+    const char* line_start = current;
     int current_line = 1;
 
     while (*current != '\0') {
@@ -119,8 +119,8 @@ char* get_line_content(char* file_content, int line_number) {
 }
 
 
-void extract_text(char *file_content, int line_number, char *buffer, size_t buffer_size) {
-    char *raw_line = get_line_content(file_content, line_number);
+void extract_text(const char *file_content, int line_number, char *buffer, size_t buffer_size) {
+    const char *raw_line = get_line_content(file_content, line_number);
     
     if (!raw_line) {
         snprintf(buffer, buffer_size, "[MISSING TEXT LINE %d]", line_number);
