@@ -14,7 +14,6 @@
 
 
 int mkdir_if_not_exists(char *path) {
-    // TODO: Déplacer cette fonction dans un module
     int status = 0;
     int exists = 0;
 
@@ -22,10 +21,15 @@ int mkdir_if_not_exists(char *path) {
     exists = !stat(path, &buffer);
 
     if (!exists) {
+        #ifdef _WIN32 
+        status = mkdir(path);
+        #else 
         status = mkdir(path, 0755);
+        #endif
     }
     return status;
 }
+
 
 int file_exists(const char *path) { return ACCESS(path, 0) == 0; }
 

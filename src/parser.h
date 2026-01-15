@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <string.h>
 #define NUM_MAX_QUESTION 10
 
 typedef struct {
@@ -17,6 +18,7 @@ typedef struct {
 tableau_question parse_question_bloc(char *file_content);
 
 
-char* get_line_content(char* file_content, int line_number);
+const char* get_line_content(const char* file_content, int line_number);
+void extract_text(const char *file_content, int line_number, char *buffer, size_t buffer_size);
 
 #endif
