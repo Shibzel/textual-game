@@ -22,7 +22,11 @@ int mkdir_if_not_exists(char *path) {
     exists = !stat(path, &buffer);
 
     if (!exists) {
+        #ifdef _WIN32 
+        status = mkdir(path);
+        #else 
         status = mkdir(path, 0755);
+        #endif
     }
     return status;
 }

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "inputs.h"
 
 // Constants
 #define DELIMITER "---"
@@ -50,7 +51,7 @@ tableau_question parse_question_bloc(char *file_content) {
             question_nbr = 0;
         } else {
             if (is_question_mode == false) {
-                puts(line);
+                output_c_by_c(line);
             } else {
                 char text_part[512];
                 char code_part[512];
@@ -115,4 +116,36 @@ const char* get_line_content(const char* file_content, int line_number) {
     }
 
     return NULL;
+}
+
+
+void extract_text(const char *file_content, int line_number, char *buffer, size_t buffer_size) {
+    const char *raw_line = get_line_content(file_content, line_number);
+    
+    if (!raw_line) {
+        snprintf(buffer, buffer_size, "[MISSING TEXT LINE %d]", line_number);
+        return;
+    }
+
+    size_t i = 0; // Index for buffer
+    size_t j = 0; // Index for raw_line
+
+    while (i < buffer_size - 1 && raw_line[j] != '\0' && raw_line[j] != '\n') {
+        
+        // Skip Carriage Returns (\r) so the cursor doesn't reset to the left
+        if (raw_line[j] == '\r') {
+            j++;
+            continue;
+        }
+
+        // Handle literal "\n" (backslash + n)
+        if (raw_line[j] == '\\' && raw_line[j + 1] == 'n') {
+            buffer[i++] = '\n';
+            j += 2; 
+        } else {
+            buffer[i++] = raw_line[j++];
+        }
+    }
+    
+    buffer[i] = '\0';
 }
