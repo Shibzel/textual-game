@@ -31,8 +31,8 @@ char *items_parse_to_file(items items_array) {
         items_array[i] != 0  // I00 does not exist, so 0 means it is the end of the array
         && i < ITEMS_MAX
     ) {
-        char temp[4]; // "00\n" + '\0'
-        snprintf(temp, sizeof(temp), "%02d\n", items_array[i]);
+        char temp[5]; // "I00\n" + '\0'
+        snprintf(temp, sizeof(temp), "I%02d\n", items_array[i]);
         strcat(buffer, temp);  // Concatenation
         i++;
     }
@@ -40,27 +40,26 @@ char *items_parse_to_file(items items_array) {
     return buffer;
 }
 
-void items_parse_to_array(items *items_array, char *raw_items) {
-    unsigned i = ITEMS_FILE_LINE_START;
+void items_parse_to_array(items items_array, char *raw_items) {
+    // unsigned i = 0; // Commence à 0 pour remplir tout le tableau
 
-    while (i < ITEMS_MAX) {
-        char *item_line = get_line_content(raw_items, i);
+    // while (i < ITEMS_MAX) {
+    //     char line[5]; // "I00\n" + '\0'
+    //     if (get_line_content(raw_items, i + 1) == NULL) {
+    //         items_array[i] = 0; // Fin du tableau
+    //         break;
+    //     }
 
-        if (item_line == NULL) {
-            *items_array[i] = 0;
-            break;
-        }
+    //     int value;
+    //     if (sscanf(line, "I%2d", &value) != 1) {
+    //         items_array[i] = 0; // Format invalide
+    //     } else {
+    //         items_array[i] = (items)value; // Stocke la valeur
+    //     }
 
-        if (sscanf(item_line, "%u", items_array[i]) != 1) {
-            *items_array[i] = 0;
-            break;
-        }
-
-        i++;
-    }
-    if (i < ITEMS_MAX) {
-        *items_array[i] = 0;
-    }
+    //     printf("%u, %s, %u\n", i, line, items_array[i]);
+    //     i++;
+    // }
 }
 
 void save_save(char *save_path, char *save_fn, save current_save) {

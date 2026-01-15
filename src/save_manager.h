@@ -32,7 +32,7 @@ typedef struct {
 int save_exists(char *save_path, char *save_fn);
 save load_save(char *save_path, char *save_fn);
 char *items_parse_to_file(items items_array);
-void items_parse_to_array(items *items_array, char *raw_items);
+void items_parse_to_array(items items_array, char *raw_items);
 void save_save(char *save_path, char *save_fn, save current_save);
 char *get_name(char *name, char *display, char *confirmation_display, char *bad_input);
 
