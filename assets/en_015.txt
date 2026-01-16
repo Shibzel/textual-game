@@ -2,7 +2,7 @@ You storm toward the heavy oak door and kick it open with all your strength. The
 At the center of the room, a giant rubber duck floats mid-air, pulsing with the same green light. The thumping sound grows louder, shaking the floor beneath your feet.
 One of the duck figures steps forward, holding out a clipboard. "Ah! A volunteer! Before we proceed with the ritual, you must answer our question: What is the meaning of the universe?"
 ---
-1) "42 !" : [[017]]
-2) "Food" : [[016]]
-3) "taxes" : [[017]]
-4) "I don't know ??" : [[016]]
+42 !;017
+Food;016
+taxes;017
+I don't know ??;016
