@@ -39,18 +39,17 @@ char* load_asset(const char *filename) {
     long file_size;
     struct stat st;
     char *buffer;
-
-
+    
     // Construct path to assets subfolder
-    snprintf(path, sizeof(path), "assets/%s", filename);
-
+    snprintf(path, sizeof(path), "%s", filename);
+    
     // Open the file
     FILE *fp = fopen(path, "r");
     if (fp == NULL) {
         perror("Error opening file");
         return NULL;
     }
-
+    
     // Get file size 
     if (stat(path, &st) != 0) {
         perror("Error getting file size");
@@ -58,19 +57,52 @@ char* load_asset(const char *filename) {
         return NULL;
     }
     file_size = st.st_size;
-
+    
     // Allocate memory
-    buffer = (char *)malloc(file_size + 1); // +1 for null terminator
+    buffer = (char *)malloc(file_size + 1);
     if (buffer == NULL) {
         perror("Memory allocation failed");
         fclose(fp);
         return NULL;
     }
-
+    
     // Read content into buffer
-    fread(buffer, 1, file_size, fp);
-    buffer[file_size] = '\0'; // Null-terminate
+    size_t bytes_read = fread(buffer, 1, file_size, fp);
+    buffer[bytes_read] = '\0';
     fclose(fp);
-
+    
+    // ---------------------------------------------------------
+    //  COLOR DECODER: Convert literal "\033" text to ASCII 27
+    // ---------------------------------------------------------
+    char *read_ptr = buffer;
+    char *write_ptr = buffer;
+    
+    while (*read_ptr) {
+        // Check if we found the literal sequence "\033"
+        if (read_ptr[0] == '\\' && read_ptr[1] == '0' && 
+            read_ptr[2] == '3' && read_ptr[3] == '3') {
+            
+            *write_ptr = '\033'; // Insert the REAL Escape character
+            write_ptr++;
+            read_ptr += 4;       // Skip the 4 text characters
+        } 
+        else {
+            *write_ptr = *read_ptr;
+            write_ptr++;
+            read_ptr++;
+        }
+    }
+    *write_ptr = '\0'; // Null-terminate at the new end position
+    
+    // ---------------------------------------------------------
+    // CRITICAL FIX: Reallocate to actual size to avoid garbage data
+    // ---------------------------------------------------------
+    size_t new_size = write_ptr - buffer;
+    char *trimmed = realloc(buffer, new_size + 1);
+    if (trimmed != NULL) {
+        buffer = trimmed;
+    }
+    // If realloc fails, buffer is still valid with correct null terminator
+    
     return buffer;
 }

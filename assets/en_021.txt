@@ -2,4 +2,6 @@ You press the toaster lever again. The toast, now perfectly fine, suddenly screa
 BOOM.
 A tiny explosion of crumbs and smoke erupts from the toaster. The force of it knocks you backward, sending you sprawling onto the floor. The ceiling spins above you as the room fills with the acrid smell of burnt carbs.
 The last thing you see is the toaster’s glowing slots forming a frown before everything fades to black.
+---
+A66
 #ENDINGD

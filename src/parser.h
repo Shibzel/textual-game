@@ -12,10 +12,10 @@ typedef struct {
 typedef struct {
     question questions[NUM_MAX_QUESTION];
     int NBR_QUESTION;
-} tableau_question;
+} question_table;
 
 
-tableau_question parse_question_bloc(char *file_content);
+question_table parse_question_bloc(char *file_content);
 
 
 const char* get_line_content(const char* file_content, int line_number);

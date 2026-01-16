@@ -22,6 +22,13 @@ typedef unsigned items[ITEMS_MAX];
 #define TEXT_MAX_SIZE 2048
 
 
+void title_screen() {
+    char *title_ascii;
+    title_ascii = load_asset(ASSETS_FP"a_00.txt");
+    appear(title_ascii);
+    free(title_ascii);
+}
+
 
 
 void process_save_menu(const char *lang_content, save *available_saves, save *current_save, int unsigned *do_init_save) {
@@ -90,6 +97,7 @@ void process_save_menu(const char *lang_content, save *available_saves, save *cu
         current_save->save_version = CURRENT_SAVE_VERSION;
         current_save->status = 0;
         current_save->time_elapsed = 0;
+        current_save->nbr_items = 0;
         save_save(SAVE_PATH, save_fn, *current_save);
     }
 }
@@ -112,36 +120,37 @@ void language_selection(char *language) {
     }
 }
 
-
 void init_game(save current_save, char language[3]) {
-    tableau_question retour_question;
-
+    question_table retour_question;
     char *eng_text;
     int numbr;
-    char s[100];
-    char* inputs; 
-    char error[256]; 
-    char display[256];
+    char file_name[100];
 
     numbr = 0;
-    snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
-    eng_text = load_asset(s);
+    snprintf(file_name, sizeof(file_name), ASSETS_FP"%s_%03d.txt", language, numbr);
+    eng_text = load_asset(file_name);
   
     while (eng_text != NULL) {
         retour_question = parse_question_bloc(eng_text);
-        for (int question = 1; question <= retour_question.NBR_QUESTION;
-            question++) {
-        printf(" %d) %s\n", question,
-                retour_question.questions[question].Question);
+        
+        for (int question = 1; question <= retour_question.NBR_QUESTION; question++) {
+            printf(BLUE" %d) %s\n"RESET, question,
+                   retour_question.questions[question].Question);
         }
-        free(eng_text);
+        
         numbr = get_choice("What do you choose?", "not valid try again",
-                        retour_question.NBR_QUESTION);
+                          retour_question.NBR_QUESTION);
 
-        snprintf(s, sizeof(s), "%s_%03d.txt", language, numbr);
-        eng_text = load_asset(s);
+        // **FIX: Use the Code from the selected question, not the choice number**
+        int next_file_code = retour_question.questions[numbr].Code;
+        
+        // Clean up before next iteration
+        free(eng_text);
+
+        snprintf(file_name, sizeof(file_name), ASSETS_FP"%s_%03d.txt", language, next_file_code);
+        eng_text = load_asset(file_name);
     }
-    free(inputs);
+    // No free(inputs) 
 }
 
 // int main(void) {
@@ -158,55 +167,25 @@ void init_game(save current_save, char language[3]) {
 // }
 
 int main(void) {
+    // Variables
     char language[3]; // 2 characters string, including "\0"
     unsigned do_init_save = 0;
     char save_fn[SAVE_FILE_LENGTH]; // Save file name
-    unsigned save_choice;
     save current_save;
     save available_saves[MAX_SAVES];
+
+    //Title Screen
+    title_screen();
+
     // Language selection
     language_selection(language);
+   
 
-
-    //// Save selection
-    //puts("Here are the following saves :"); // TODO: Not translated
-    //for (int i = 1; i < MAX_SAVES + 1; i++) {
-    //    sprintf(save_fn, SAVE_FILE_FORMAT, i);
-    //    if (save_exists(SAVE_PATH, save_fn)) {
-    //        available_saves[i - 1] = load_save(SAVE_PATH, save_fn);
-    //        printf(" %d) Username : %s - Time elapsed : %ds\n", i,
-    //               available_saves[i].name,
-    //               available_saves[0].time_elapsed); // TODO: Convert seconds into
-    //                                                 // hours, minutes and seconds
-    //    } else {
-    //        printf(" %d) New save\n", i);
-    //    }
-    //}
-    //save_choice =
-    //    get_choice("Chose a save [1-%d] : ", "Bad input. Try again.", MAX_SAVES);
-    //sprintf(save_fn, SAVE_FILE_FORMAT, save_choice);
-    //if (save_exists(SAVE_PATH, save_fn)) {
-    //    current_save = available_saves[save_choice];
-    //} else {
-    //    do_init_save = 1;
-    //}
-//
-    //// Resume/start the game
-    //if (do_init_save) {
-    //    get_name(current_save.name,
-    //             "How do you want to name yourself ?\nEnter a name : ",
-    //             "Do you want to name yourself '%s' ?\nThis is not reversible "
-    //             "without creating a new save.\n 1) Yes\n 2) No\nChose [1-%d] : ",
-    //             "Bad input. Try again."); // TODO: Not translated
-    //    current_save.save_version = CURRENT_SAVE_VERSION;
-    //    current_save.status = 000;
-    //    current_save.time_elapsed = 0;
-//
-    //    save_save(SAVE_PATH, save_fn, current_save);
-    //}
-    char* file_content = load_asset(!strcmp("en", language) ? "en_main.txt" : "fr_main.txt");
+    // Save menu
+    char* file_content = load_asset(!strcmp("en", language) ? ASSETS_FP"en_main.txt" : ASSETS_FP"fr_main.txt");
     process_save_menu(file_content, available_saves, &current_save, &do_init_save);
     
+    // Game starts
     init_game(current_save, language);
 
     return 0;

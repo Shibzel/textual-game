@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "inputs.h"
-
+#define MAX_TERMINAL_WIDTH 80 
+#define BUF_SIZE 1024 * 1024 // 1MB Buffer
 
 #ifdef _WIN32
     #include <windows.h>
@@ -89,6 +90,30 @@ void stop_sound() {
 #endif
 }
 
+void appear(const char* text) {
+    size_t len = strlen(text);
+    if (len == 0) return;
+    char *string;
+
+#ifdef _WIN32
+    // Windows: Direct System Call to the Console Handle
+    // This is much faster than printf() or puts()
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+    DWORD written;
+    WriteFile(hOut, text, (DWORD)len, &written, NULL);
+    puts("");
+#else
+    // Linux/Unix: Direct Write System Call
+    // This bypasses the C standard library buffers entirely
+    write(STDOUT_FILENO, text, len);
+    puts("");
+#endif
+}
+
 unsigned get_choice(char *display, char *bad_input, unsigned max_inputs) {
   unsigned input, unvalid;
 
@@ -128,45 +153,82 @@ char *get_name(char *name, char *display, char *confirmation_display,
   return name;
 }
 
+
 void output_c_by_c(const char *buffer) {
     if (buffer == NULL) return;
 
     int skip_delay = 0;
+    int current_col = 0; // Track column to handle line wraps
     start_sound("assets/sounds/typing.wav");
 
     while (*buffer) {
-        // Check if a key was pressed to skip
+        // Check for Skip Input
         if (!skip_delay && kbhit()) {
             int ch = getch();
-            if (ch == 10 || ch == 13) { // Enter key
+            if (ch == 10 || ch == 13 || ch == ' ') { 
                 skip_delay = 1;
-                stop_sound(); 
+                stop_sound();
             }
         }
 
-        if (*buffer == '\r') {
-            buffer++;
-            continue;
+        // UTF-8 Character Handling 
+        int char_len = 1;
+        if ((unsigned char)*buffer > 127) {
+            if ((*buffer & 0xE0) == 0xC0) char_len = 2;
+            else if ((*buffer & 0xF0) == 0xE0) char_len = 3;
+            else if ((*buffer & 0xF8) == 0xF0) char_len = 4;
         }
 
-        printf("%c", *buffer);
-        fflush(stdout); 
-        
-        if (!skip_delay) {
-            SLEEP(85); 
+        //  Print the character(s)
+        for (int i = 0; i < char_len; i++) {
+            putchar(buffer[i]);
         }
-        buffer++;
+
+        //  Update column tracking
+        if (*buffer == '\n') {
+            current_col = 0;
+        } else {
+            current_col++;
+        }
+
+        // Retro Cursor Logic using ANSI Escape Codes
+        // Only show cursor if we aren't at the very edge of the terminal
+        if (!skip_delay && *buffer != '\n' && current_col < MAX_TERMINAL_WIDTH - 1) {
+            // \033[s = Save cursor position
+            // \033[u = Restore cursor position
+            printf("\033[s_\033[u"); 
+            fflush(stdout);
+            SLEEP(15);
+            // Overwrite the cursor with a space then restore again
+            printf("\033[s \033[u"); 
+            fflush(stdout);
+        } else {
+            fflush(stdout);
+        }
+
+        //  Dynamic Punctuation Delay
+        if (!skip_delay) {
+            int delay = 25 + (rand() % 15); // Faster base speed
+
+            if (*buffer == '.' || *buffer == '!' || *buffer == '?') {
+                delay = 300; 
+            } else if (*buffer == ',' || *buffer == ':') {
+                delay = 100; 
+            }
+            
+            SLEEP(delay);
+        }
+
+        buffer += char_len;
     }
 
     if (!skip_delay) stop_sound();
     printf("\n");
 
-    // CRITICAL: Clear the input buffer. 
-    // This prevents the "Enter" you used to skip from triggering the next scanf.
+    // Clear input buffer
     #ifdef _WIN32
         while (_kbhit()) _getch();
     #else
-        tcflush(STDIN_FILENO, TCIFLUSH); 
+        tcflush(0, TCIFLUSH);
     #endif
 }
-

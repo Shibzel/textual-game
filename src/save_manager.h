@@ -26,6 +26,7 @@ typedef struct {
     unsigned time_elapsed;    // For statistics and the speedrun counter
     unsigned status;          // Status of the game, where the player progressed
     items items;              // The list of items the player has
+    unsigned nbr_items;
 } save;
 
 

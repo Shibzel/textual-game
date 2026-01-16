@@ -15,7 +15,24 @@ int save_exists(char *save_path, char *save_fn) {
 }
 
 save load_save(char *save_path, char *save_fn) {
-    // TODO: Implement
+    save loaded_save;
+    char file_path[512];
+    char *file_content; 
+    char location[2];
+
+    snprintf(file_path, sizeof(file_path), "%s/%s", save_path, save_fn);
+
+
+    file_content = load_asset(file_path);
+
+    extract_text(file_content, 2, loaded_save.name, sizeof(loaded_save.name));
+    extract_text(file_content, 4, location, sizeof(location));
+
+    loaded_save.status = atoi(location);
+
+    //TODO : Implement Time & Items
+
+    return loaded_save;
 }
 
 char *items_parse_to_file(items items_array) {

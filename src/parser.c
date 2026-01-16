@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "files.h"
 #include "inputs.h"
+#include <ctype.h>
 
 // Constants
 #define DELIMITER "---"
@@ -17,20 +19,20 @@ typedef struct {
 typedef struct {
     question questions[NUM_MAX_QUESTION];
     int NBR_QUESTION;
-} tableau_question;
+} question_table;
 
-tableau_question parse_question_bloc(char *file_content) {
+question_table parse_question_bloc(char *file_content) {
     
     // Sanity Check
     if (file_content == NULL)
-        return (tableau_question){0};
+        return (question_table){0};
 
     // Variables
     char *ptr = file_content;
     char line[1024];
     bool is_question_mode;
     int question_nbr;
-    tableau_question returned_quests;
+    question_table returned_quests;
 
     // Start
     is_question_mode = false;
@@ -46,31 +48,68 @@ tableau_question parse_question_bloc(char *file_content) {
         }
 
         //? Detect special zone
-        if (strstr(line, DELIMITER) != NULL) {
+         if (strstr(line, DELIMITER) != NULL) {
             is_question_mode = !is_question_mode;
             question_nbr = 0;
         } else {
             if (is_question_mode == false) {
                 output_c_by_c(line);
             } else {
-                char text_part[512];
-                char code_part[512];
+                // Check if line starts with 'I' or 'A'
+             if (is_question_mode == false) {
+                output_c_by_c(line);
+            } else {
+                // Check if line starts with 'I' or 'A' AND is followed by a digit
+                // This prevents false matches with words like "Attendez"
+                if ((line[0] == 'I' || line[0] == 'A') && isdigit(line[1])) {
+                    char file_name[25];
+                    char *file_content;
+                    int id_val = 0;
 
-                //  %[^;] reads everything up to ';' https://koor.fr/C/cstdio/fscanf.wp
-                // ; matches the literal semicolon
-                // " %[^\n]" reads the rest (skipping space after semi)
-                if (sscanf(line, "%[^;]; %[^\n]", text_part, code_part) == 2) {
-                    question_nbr++;
-                    returned_quests.questions[question_nbr].Question = malloc(strlen(text_part) + 1);
-                    strcpy(returned_quests.questions[question_nbr].Question, text_part);
-
-                    returned_quests.questions[question_nbr].Code = atoi(code_part);
-                    returned_quests.NBR_QUESTION = question_nbr;
-                } else {
-                    // In case we forgot ; we just print the line anyway
+                    if (sscanf(line + 1, "%d", &id_val) == 1) {
+                        switch (line[0]) {
+                            case 'I':
+                                printf("[DEBUG] Loading Item ID: %d\n", id_val); 
+                                break;
+                        
+                            case 'A':
+                                snprintf(file_name, sizeof(file_name), "a_%02d.txt", id_val);
+                                file_content = load_asset(file_name);
+                                appear(file_content);
+                                free(file_content);
+                                fflush(stdout);
+                            break;
+                        }
+                    } else {
+                        printf("[ERROR] Failed to parse ID number from line: %s\n", line);
+                    }
+                }
+                // Handle regular questions (text;code format)
+                else if (strchr(line, ';') != NULL) {
+                    char text_part[512];
+                    char code_part[512];
+                         //  %[^;] reads everything up to ';' https://koor.fr/C/cstdio/fscanf.wp
+                        // ; matches the literal semicolon
+                        // " %[^\n]" reads the rest (skipping space after semi)
+                    if (sscanf(line, "%[^;]; %[^\n]", text_part, code_part) == 2) {
+                        question_nbr++;
+                        returned_quests.questions[question_nbr].Question = malloc(strlen(text_part) + 1);
+                        if (returned_quests.questions[question_nbr].Question != NULL) {
+                            strcpy(returned_quests.questions[question_nbr].Question, text_part);
+                        }
+                    
+                        returned_quests.questions[question_nbr].Code = atoi(code_part);
+                        returned_quests.NBR_QUESTION = question_nbr;
+                    } else {
+                        printf("%s\n", line);
+                    }
+                }
+                // Lines that don't match any pattern - just print them
+                else {
                     printf("%s\n", line);
                 }
             }
+        }
         }
 
         // Next line
