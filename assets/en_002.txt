@@ -1,5 +1,5 @@
 You patiently wait until he wakes up. So he does. He looks at you, confused.
 "Hey, why are you strapped on a chair ? Do you need help ? What kind of freak did this to you ?", he says.
 ---
-1. "Hey, man. There is this crazy dude that kidnapped me. I really need you to untie me!";001
+"Hey, man. There is this crazy dude that kidnapped me. I really need you to untie me!";001
 "No.";003

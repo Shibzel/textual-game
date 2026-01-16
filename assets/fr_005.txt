@@ -1,0 +1,6 @@
+Tu regardes autour de toi et aperçois quatre portes.
+---
+Ouvrir la porte avec **"manchots"** et une poignée en forme de bec;009
+Ouvrir la porte marquée **"vieil homme"**;008
+Ouvrir la porte **"cuisine"**;010
+Tenter ta chance avec la porte **"la sortie (probablement)"**;011

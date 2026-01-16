@@ -1,0 +1,8 @@
+Vous poussez la porte marquée « cuisine ». La pièce est simple et propre, avec une table en bois au centre et quelques chaises autour. Une cafetière murmure doucement dans un coin, emplissant l’air d’un arôme chaud et riche. Une assiette de cookies est posée sur la table, accompagnée d’un mot manuscrit :
+« Prends-en un. Ou pas. Comme tu veux. »
+Un grille-pain trône sur le plan de travail, parfaitement ordinaire. Un morceau de toast légèrement brûlé y est coincé, comme si quelqu’un avait été distrait en plein petit-déjeuner. La radio sur l’étagère diffuse une musique d’ambiance, à peine audible par-dessus le bourdonnement du frigo.
+---
+Prendre un cookie et s’asseoir à la table;014
+Dégager le toast coincé dans le grille-pain;018
+Ouvrir le frigo pour voir ce qu’il y a dedans;019
+Quitter la cuisine et essayer une autre porte;005

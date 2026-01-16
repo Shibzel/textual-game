@@ -1,0 +1,8 @@
+Vous vous précipitez vers la lourde porte en chêne et l'enfoncez d'un coup de pied puissant. La porte s'arrache de ses gonds, révélant une pièce faiblement éclairée, baignée d'une lueur verte étrange. À l'intérieur, un groupe de personnages vêtus de costumes de canard se tient en cercle, psalmodiant à l'unisson : "Coincoin à l'hérétique ! Coincoin à l'incrédule !" Ils se tournent vers vous en parfaite synchronisation, leurs becs brillant de manière inquiétante.
+Au centre de la pièce, un énorme canard en caoutchouc flotte en l'air, pulsant de la même lumière verte. Le bruit sourd s'intensifie, faisant trembler le sol sous vos pieds.
+L'un des personnages canard s'avance, tenant un porte-bloc. "Ah ! Un volontaire ! Avant de poursuivre le rituel, vous devez répondre à notre question : quel est le sens de l'univers ?"
+---
+42 !;017
+La nourriture;016
+Les impôts;017
+Je ne sais pas ??;016

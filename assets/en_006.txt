@@ -1,5 +1,5 @@
 You sigh and agree to help the old man find his diapers. He hands you a crumpled shopping list: "Extra-large, hypoallergenic, and preferably with cartoon dinosaurs on them."
 He points down the hallway. "They’re either in the children’s bedroom or the basement storage. The bedroom’s got a sign with a teddy bear. The basement... well, just don’t mind the giggling."
 ---
-Head to the children’s bedroom, at least it sounds normal;012
-Go to the basement storage, despite the giggling;013
+Head to the children’s bedroom, at least it sounds normal;014
+Go to the basement storage, despite the giggling;014

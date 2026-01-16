@@ -1,0 +1,8 @@
+Un vieil homme s’approche de vous et tente de vous parler, mais une quinte de toux incontrôlable le terrassse avant qu’il ne s’effondre au sol, inconscient.
+Un autre vieil homme entre—ignorant le corps—et déclare :
+« Tu ne sortiras pas d’ici tout seul, cet endroit est maudit.
+À moins que tu m’aides à retrouver mes couches, je ne te donnerai pas un coup de main pour t’en aller. »
+---
+C’est votre seule issue. Aidez-le à trouver ses couches ;006
+Frappez le vieil homme ;007
+Apportez-lui ses couches ;U01;008

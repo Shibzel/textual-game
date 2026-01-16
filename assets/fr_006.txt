@@ -1,0 +1,5 @@
+Tu soupires et acceptes d'aider le vieil homme à retrouver ses couches. Il te tend une liste de courses froissée: "Extra-large, hypoallergéniques, et avec des dinosaures en dessin animé si possible."
+Il pointe vers le couloir. "Elles sont soit dans la chambre d'enfant, soit dans le stockage du sous-sol. La chambre a une porte avec un ours en peluche. Pour le sous-sol... ignore les rires."
+---
+Aller dans la chambre d'enfant, au moins ca a l'air normal;014
+Descendre au sous-sol, malgre les gloussements;015

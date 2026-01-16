@@ -1,0 +1,5 @@
+Vous serrez le poing et frappez. Vos phalanges atteignent le nez du vieil homme, qui chancelle en arrière, la main sur le visage. « Aïe ! Ça, c’était pas nécessaire ! » geint-il, mais une lueur brille dans son regard — presque comme s’il était impressionné.
+Il essuie un filet de sang de sa narine et ricane. « Très bien. Pas de couches, pas d’aide. Mais puisque tu as visiblement la violence facile, peut-être que ce qu’il y a derrière cette porte te plaira. » Il désigne une lourde porte en chêne au bout du couloir, maintenant entrebâillée. Un bruit sourd et rythmé en provient, à peine audible
+---
+Foncez vers la porte et enfoncez-la d’un coup de pied;015
+Ignorez-le et reprenez votre recherche d’une sortie;004

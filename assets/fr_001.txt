@@ -1,7 +1,6 @@
-Vous vous libérez de votre chaise et courez vers la sortie en laissant l'homme derrière.
-En traversant un couloir, vous trouvez une clé au sol et la récupérez.
+Libéré et enfin libre, tu te précipites vers la sortie, laissant l’homme derrière toi.
+En traversant un couloir, tu trouves une clé par terre et la ramasses.
 ---
-Essayer de trouver une sortieexit;004
-Observer les aléantours;005
----
-I01;Clé ronde
+Chercher une issue;004
+Regarder autour;005
+I01

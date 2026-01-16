@@ -1,6 +1,7 @@
-Vous vous réveillez, attaché à une chaise dans ce qui semble être un garage. Vous ne distinguez vraiment pas grand-chose, car vous avez les yeux bandés. Un homme s’approche de vous, vous baffe et enlève le tissu qui obstruait votre vue.
-Vous savez ce qu’il veut : obtenir de l’argent de la part de vos parents. Il s’agit d’une situation de rançon. Votre famille est extrêmement riche, donc vous saviez que cela finirait par arriver un jour.
-Cependant, quelque chose d’imprévu se produit : il trébuche sur un fil au sol, frappe sa tête contre votre chaise et s’effondre, inconscient.
+Tu te réveilles, attaché à une chaise dans ce qui semble être un garage. Difficile d’en être sûr, car tu as les yeux bandés. Un homme s’approche de toi et retire le tissu qui t’empêche de voir, avec un geste théâtral.
+Il porte un T-shirt "Meilleur Kidnappeur du Monde" (ce qui est faux, d’ailleurs—il a oublié d’attacher ton pied gauche). Il se lance dans un long discours sur son plan diabolique.
+Tu sais très bien ce qu’il veut : soutirer de l’argent à tes parents. Une classique prise d’otage. Ta famille est extrêmement riche, alors tu savais que ça finirait par arriver un jour.
+Mais voici le twist inattendu : il trébuche sur ses propres lacets et s’étale, K.O. net. Tu l’observes, et une opportunité se présente.
 ---
-Essayez de vous dégager;001
-Attendez patiemment qu’il se réveille;002
+Essayer de te libérer;001
+Attendre patiemment qu’il se réveille;002
