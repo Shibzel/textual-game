@@ -73,7 +73,7 @@ question_table parse_question_bloc(char *file_content) {
                                 break;
                         
                             case 'A':
-                                snprintf(file_name, sizeof(file_name), "a_%02d.txt", id_val);
+                                snprintf(file_name, sizeof(file_name), "assets/a_%02d.txt", id_val);
                                 file_content = load_asset(file_name);
                                 appear(file_content);
                                 free(file_content);
